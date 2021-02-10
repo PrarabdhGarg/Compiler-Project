@@ -1,5 +1,11 @@
 #include "TwinBuffer.h"
 
+// A twin buffer includes two buffers to reduce the number of I/O operations
+// required while breaking the source code into lexemes. Buffers ensure that
+// we can perform I/O in chunks instead of character by character. Two buffers
+// are required to handle the case when a lexeme spans across buffer boundaries
+
+// Create a new Twin Buffer object, to read source code from [fileName]
 TwinBuffer *newBuffer(char *fileName) {
 	TwinBuffer *twinBuffer = (TwinBuffer *) malloc(sizeof(TwinBuffer));
 	twinBuffer -> file = fopen(fileName, "r");
@@ -21,6 +27,9 @@ TwinBuffer *newBuffer(char *fileName) {
 	}
 	return twinBuffer;
 }
+
+// Return the next character of the from the buffered I/O. If the current buffer has 
+// exhausted its capacity, load more data into the other buffer, and continue reading
 char nextChar(TwinBuffer *twinBuffer) {
 	if(twinBuffer -> forward == twinBuffer -> buff1 + (MAX_BUFF_SIZE - 1)) {
 		int read = fread(twinBuffer -> buff2, sizeof(char), (MAX_BUFF_SIZE - 1), twinBuffer -> file);
@@ -41,6 +50,7 @@ char nextChar(TwinBuffer *twinBuffer) {
 	return c;
 }
 
+// Function to get the current lexeme read by the lexer.
 char *getLexeme(TwinBuffer *twinBuffer) {
 	char *lexeme = (char *)malloc(sizeof(char) * (twinBuffer -> length + 1));
 	for(int i = 0; i < twinBuffer -> length; i++) {
@@ -58,6 +68,9 @@ char *getLexeme(TwinBuffer *twinBuffer) {
 	return lexeme;
 }
 
+// Function to move the forward pointer backwards by [noOfRetractions] characters
+// Required because the transition diagram requires certain number to lookahead 
+// symbols before deciding the token boundaries in certain scenarios
 void retract(TwinBuffer *twinBuffer, int noOfRetractions) {
 	for(int i = 0; i < noOfRetractions; i++) {
 		if(twinBuffer -> forward == twinBuffer -> buff1) {

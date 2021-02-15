@@ -90,6 +90,8 @@ Token *getNextToken(Lexer *lexer) {
                         state = 31;
                     } else {
                         printf("Lexical Error: Line Number: %d Invalid character detected\n", lexer -> lineNumber);
+                        getLexeme(buffer);
+                        state = 0;
                         return NULL;
                     }
                 }
@@ -130,6 +132,8 @@ Token *getNextToken(Lexer *lexer) {
                 return newToken(lexer, EQ);
             } else {
                 printf("Lexical Error: Line Number: %d Expecting = Found %c\n", lexer -> lineNumber, lookahead);
+                getLexeme(buffer);
+                state = 0;
                 return NULL;
             }
             break;
@@ -138,6 +142,8 @@ Token *getNextToken(Lexer *lexer) {
                 return newToken(lexer, NE);
             } else {
                 printf("Lexical Error: Line Number: %d Expecting = Found %c\n", lexer -> lineNumber, lookahead);
+                getLexeme(buffer);
+                state = 0;
                 return NULL;
             }
             break;
@@ -154,6 +160,8 @@ Token *getNextToken(Lexer *lexer) {
                 return newToken(lexer, RANGEOP);
             } else {
                 printf("Lexical Error: Line Number: %d Expecting . Found %c\n", lexer -> lineNumber, lookahead);
+                getLexeme(buffer);
+                state = 0;
                 return NULL;
             }
             break;
@@ -185,6 +193,8 @@ Token *getNextToken(Lexer *lexer) {
                 state = 34;
             } else {
                 printf("Lexical Error: Line Number: %d Expecting Digit. Found %c\n", lookahead);
+                getLexeme(buffer);
+                state = 0;
                 return NULL;
             }
             break;
@@ -205,6 +215,8 @@ Token *getNextToken(Lexer *lexer) {
                 state = 37;
             } else {
                 printf("Lexical Error: Line Number: %d Expecting +, -, or Digit. Found %c\n", lookahead);
+                getLexeme(buffer);
+                state = 0;
                 return NULL;
             }
             break;
@@ -213,6 +225,8 @@ Token *getNextToken(Lexer *lexer) {
                 state = 38;
             } else {
                 printf("Lexical Error: Line Number: %d Expecting Digit. Found %c\n", lookahead);
+                getLexeme(buffer);
+                state = 0;
                 return NULL;
             }
             break;
